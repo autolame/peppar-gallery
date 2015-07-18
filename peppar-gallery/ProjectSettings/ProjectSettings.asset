@@ -5,7 +5,7 @@ PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 7
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 0
   targetDevice: 2
   targetResolution: 0
   accelerometerFrequency: 60
@@ -261,7 +261,7 @@ PlayerSettings:
   spritePackerPolicy: 
   scriptingDefineSymbols:
     4: VUFORIA_IOS_SETTINGS
-    7: VUFORIA_ANDROID_SETTINGS
+    7: VUFORIA_ANDROID_SETTINGS;VUFORIA_SAMPLE_ORIENTATION_SETTINGS
   metroPackageName: peppar-gallery
   metroPackageLogo: 
   metroPackageLogo140: 
