@@ -23,6 +23,8 @@ public class CameraRaycast : MonoBehaviour
     [SerializeField]
     GameObject _crosshair;
 
+    private bool _justSelected = false;
+
     // Use this for initialization
     void Awake()
     {
@@ -31,6 +33,9 @@ public class CameraRaycast : MonoBehaviour
             _startTime = 3;
         }
         _time = _startTime;
+
+        if (_crosshair != null)
+            _crosshair.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -54,37 +59,65 @@ public class CameraRaycast : MonoBehaviour
     {
         if (Physics.Raycast(_ray, out hit, Mathf.Infinity))
         {
-
-            _time -= Time.deltaTime;
-
-            Debug.Log(_time);
             if (_time <= 0)
             {
+                _crosshair.transform.localScale = Vector3.one;
+
+                _crosshair.gameObject.SetActive(false);
                 RotateObject();
+
+                _justSelected = true;
             }
+            else
+            {
+                _crosshair.gameObject.SetActive(true);
 
-            var scale = _crosshair.transform.localScale;
+                _crosshair.GetComponentInChildren<SpriteRenderer>().color = Color.white;
 
-            scale.x -= Time.deltaTime;
-            scale.y -= Time.deltaTime;
-            scale.z -= Time.deltaTime;
+                _time -= Time.deltaTime;
 
-            scale = new Vector3(scale.x, scale.y, scale.z);
+                var scale = _crosshair.transform.localScale;
 
-            //scale = new Vector3(Mathf.MoveTowards(scale.x, 0, .05f), Mathf.MoveTowards(scale.y, 0, .05f), Mathf.MoveTowards(scale.z, 0, .05f));
-            //scale = new Vector3(scale.x );
+                float scaleValue = _time / _startTime;
 
+                scale.x = scale.y = scale.z = scaleValue;
 
-            _crosshair.transform.localScale = scale;
+                scale = new Vector3(scale.x, scale.y, scale.z);
 
-
-
+                _crosshair.transform.localScale = scale;
+            }
         }
         else
         {
-            _time = _startTime;
-            _crosshair.transform.localScale = Vector3.one;
-            WOM.GotHit = false;
+            if (_justSelected && _time >= -_startTime)
+            {
+                _crosshair.gameObject.SetActive(true);
+                _crosshair.GetComponentInChildren<SpriteRenderer>().color = Color.red;
+                _time -= Time.deltaTime;
+
+                var scale = _crosshair.transform.localScale;
+
+                float scaleValue = _time / _startTime;
+
+                scale.x = scale.y = scale.z = scaleValue;
+
+                scale = new Vector3(scale.x, scale.y, scale.z);
+
+                _crosshair.transform.localScale = scale;
+            }
+            else if (_justSelected && _time < -_startTime)
+            {
+                _justSelected = false;
+            }
+            else
+            {
+                if (_crosshair.gameObject.GetComponentInChildren<SpriteRenderer>() != null)
+                    _crosshair.gameObject.GetComponentInChildren<SpriteRenderer>().color = Color.white;
+                _crosshair.gameObject.SetActive(false);
+                _time = _startTime;
+                _crosshair.transform.localScale = Vector3.one;
+                WOM.GotHit = false;
+            }
         }
 
     }
