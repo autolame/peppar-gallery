@@ -3,11 +3,12 @@ using System.Collections;
 
 public class CameraRaycast : MonoBehaviour
 {
-
-
     Ray _ray;
     RaycastHit hit;
     float distanceToGround = 0;
+
+    [SerializeField]
+    public PlayAnimation _playAnimation;
 
     [SerializeField]
     public GameObject hitGO;
@@ -64,9 +65,14 @@ public class CameraRaycast : MonoBehaviour
                 _crosshair.transform.localScale = Vector3.one;
 
                 _crosshair.gameObject.SetActive(false);
-                RotateObject();
-
+                //RotateObject();
+                if (!_justSelected)
+                {
+                    Debug.Log("play anim");
+                    StartAnimation();
+                }
                 _justSelected = true;
+
             }
             else
             {
@@ -119,7 +125,6 @@ public class CameraRaycast : MonoBehaviour
                 WOM.GotHit = false;
             }
         }
-
     }
 
     void RotateObject()
@@ -134,7 +139,8 @@ public class CameraRaycast : MonoBehaviour
         WOM.GotHit = true;
     }
 
-
-
-
+    public void StartAnimation()
+    {
+        _playAnimation.SetAnimationState(2);
+    }
 }
